@@ -72,3 +72,22 @@ SELECT
 FROM flag
 )
 SELECT * FROM first_mil_record WHERE first_M_val=1;
+
+--------------------------------------------------------------------
+
+-- 4- write a query to find city which had lowest percentage spend for gold card type
+
+WITH cte AS (
+SELECT
+    city,
+    card_type,
+    SUM(amount) AS amount
+FROM credit_card_transactions
+WHERE card_type = 'Gold'
+GROUP BY city, card_type
+)
+SELECT
+    *,
+    (amount / SUM(amount) OVER())*100 AS pct_spend
+FROM cte
+ORDER BY pct_spend ASC LIMIT 1;
