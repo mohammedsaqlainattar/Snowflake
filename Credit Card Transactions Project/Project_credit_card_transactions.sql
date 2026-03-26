@@ -129,3 +129,7 @@ FROM results
 -- WHERE rnk = highest_exp_type OR rnk = lowest_exp_type
 GROUP BY city
 ORDER BY city;
+
+---------------------------------------------------------------------------
+
+-- 6- write a query to find percentage contribution of spends by females for each expense type
