@@ -1,1 +1,1 @@
-# SNOWFLAKE_PROJECTS
+#### SQL and Notebook projects on Snowflake
