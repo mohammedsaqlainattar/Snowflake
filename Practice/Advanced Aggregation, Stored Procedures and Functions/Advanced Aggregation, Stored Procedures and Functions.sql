@@ -60,3 +60,24 @@ GROUP BY product_id
 HAVING COUNT(*)=SUM(flag);
 
 ------------------------------------------------------
+
+--3- write a query to find month wise sales for each category for months where sales is more than the combined sales of previous 2 months for that category.
+
+WITH cte AS (
+SELECT
+    category,
+    YEAR(order_date) AS YYYY,
+    MONTH(order_date) AS MM,
+    SUM(sales) AS sales
+FROM orders
+GROUP BY category, YEAR(order_date), MONTH(order_date)
+),
+cte2 AS (
+SELECT
+    *,
+    SUM(sales) OVER(PARTITION BY category ORDER BY YYYY,MM ROWS BETWEEN 2 PRECEDING AND 1 PRECEDING) AS prev_2M_sales
+FROM cte
+)
+SELECT * FROM cte2 WHERE sales > prev_2M_sales;
+
+--------------------------------------------------
