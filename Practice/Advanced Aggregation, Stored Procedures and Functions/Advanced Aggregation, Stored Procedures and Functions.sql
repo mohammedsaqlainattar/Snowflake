@@ -92,7 +92,7 @@ SELECT * FROM cte2 WHERE sales > prev_2M_sales;
 
 
 
--- Below solution uses Snowflake's syntax
+-- Below solution uses Snowflake's syntax:
 
 CREATE OR REPLACE FUNCTION fn_business_days(start_date DATE, end_date DATE)
 RETURNS INT
@@ -127,3 +127,32 @@ BEGIN
            - 2 * DATEDIFF(WEEK, adj_start, adj_end);
 END;
 $$
+
+-- SSMS Solution:
+
+CREATE FUNCTION dbo.GetBusinessDays (
+    @start_date DATE,
+    @end_date DATE
+)
+RETURNS INT
+AS
+BEGIN
+    -- Adjust the start date to the next Monday if it falls on Saturday or Sunday
+    SET @start_date = CASE 
+        WHEN DATENAME(WEEKDAY, @start_date) = 'Saturday' THEN DATEADD(DAY, 2, @start_date)
+        WHEN DATENAME(WEEKDAY, @start_date) = 'Sunday' THEN DATEADD(DAY, 1, @start_date)
+        ELSE @start_date
+    END;
+
+    -- Adjust the end date to the next Monday if it falls on Saturday or Sunday
+    SET @end_date = CASE 
+        WHEN DATENAME(WEEKDAY, @end_date) = 'Saturday' THEN DATEADD(DAY, 2, @end_date)
+        WHEN DATENAME(WEEKDAY, @end_date) = 'Sunday' THEN DATEADD(DAY, 1, @end_date)
+        ELSE @end_date
+    END;
+
+    RETURN 
+		(select DATEDIFF(DAY,@start_date,@end_date) - 2 * DATEDIFF(week,@start_date,@end_date))
+END;
+
+----------
