@@ -128,7 +128,7 @@ BEGIN
 END;
 $$
 
--- SSMS Solution:
+-- MSSQL Solution:
 
 CREATE FUNCTION dbo.GetBusinessDays (
     @start_date DATE,
